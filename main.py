@@ -1,42 +1,27 @@
 import string
 import random
+import os
 
-def generate_key():
-    panjang_kunci = int(input("Tentukan Panjang Kunci:\n"))
-    kunci = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=panjang_kunci))
-    return kunci
+def register():
+    register_password = input("register password:")
+    register_salt = ''.join(random.choices(string.ascii_letters, k=7))
+    print("password = " + register_password)
+    print("salt = " + register_salt)
+    print("harap simpan baik-baik untuk decrypt :)")
 
-def welcome():
-    print("sukipass - a simple password manager\n")
-
-def view_password():
-    print("")
     
-def add_password():
-    nama_password = input("Masukkan nama Password\n")
-    isi_password = input("Masukkan isi Password\n")
-    results = isi_password ^ generate_key()
-    return results
- 
-def change_password():
-    print("")
-    
-def select_menu():
-    input_menu = input("Silahkan pilih menu: \n")
-    match input_menu:
-        case "1":
-            view_password()
-        case "2":
-            add_password()
-        case "3":
-            change_password()
-        case "4":
-            generate_key()
-        case _:
-            print("Kamu tidak memilih dengan benar :(")
-            
-def main():
-    welcome()
-    select_menu()
+    return register_password
 
-main()
+def check_login():
+    if not os.path.isfile('./data/credentials.json'):
+        register()
+    else:
+        login()
+        
+def login():
+    password = input("password:")
+    return password
+
+def authentication():
+    if login() == 
+    
