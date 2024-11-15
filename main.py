@@ -4,11 +4,8 @@ import random
 def generate_key():
     panjang_kunci = int(input("Tentukan Panjang Kunci:\n"))
     kunci = ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=panjang_kunci))
-    print(str(kunci))
-    
-def enkripsuki(isi_password):
-    generate_key()
-    
+    return kunci
+
 def welcome():
     print("sukipass - a simple password manager\n")
 
@@ -18,6 +15,9 @@ def view_password():
 def add_password():
     nama_password = input("Masukkan nama Password\n")
     isi_password = input("Masukkan isi Password\n")
+    results = isi_password ^ generate_key()
+    return results
+ 
 def change_password():
     print("")
     
