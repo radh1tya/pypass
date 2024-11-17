@@ -2,7 +2,8 @@ import string
 import random
 import os
 import json
-
+import sys
+sys.tracebacklimit = 0
 def xor_encryption(text, key):
     encrypted_text = ""
     for i in range(len(text)):
@@ -77,12 +78,11 @@ def shell():
             break
             
 def add_password():
-    database_username = input("Masukkan username")
-    database_password = input("Masukkan password")
-    database_ask_note = input("Apakah anda ingin memberi note?\n 1 = Ya, 0 = Tidak")
-
+    database_username = input("username: ")
+    database_password = input("password: ")
+    database_ask_note = input("note? 1 or 0: ")
     if database_ask_note == '1':
-        database_note = input("Masukkan note")
+        database_note = input("note: ")
     else:
         database_note = "0"
 
@@ -118,6 +118,7 @@ def list_password():
         print(item["username"])
         
 def main():
+    os.system('clear')
     check_login()
     
 if __name__ == "__main__":
