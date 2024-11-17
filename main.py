@@ -63,6 +63,8 @@ def shell():
         sh = input("pypass> ")
         if sh == 'a':
             add_password()
+        elif sh == 'l':
+            list_password()
         elif sh == 'h':
             print("a - menambah password baru")
             print("l - melihat kumpulan password")
@@ -112,7 +114,9 @@ def add_password():
 def list_password():
     with open('./data/credentials.json', 'r') as infile:
         existing_data = json.load(infile)
-    existing_data['users']
+    for item in existing_data["users"]:
+        print(item["username"])
+        
 def main():
     check_login()
     
