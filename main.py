@@ -108,6 +108,7 @@ def dashboard():
         print("*** Ini masih percobaan ***")
         shell()
     except Exception as e:
+        print(":(")
     finally:
         encrypt_credentials()
         sys.exit(0)
