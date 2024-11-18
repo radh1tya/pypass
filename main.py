@@ -1,3 +1,4 @@
+import getpass
 import string
 import random
 import os
@@ -37,7 +38,7 @@ def check_login():
         login()
         
 def login():
-    password = input("password:")
+    password = getpass.getpass("password:")
     if checker(password):
         print("Login berhasil!")
         dashboard()
@@ -89,7 +90,7 @@ def shell():
             
 def add_password():
     database_username = input("username: ")
-    database_password = input("password: ")
+    database_password = getpass.getpass("password: ")
     database_ask_note = input("note? 1 or 0: ")
     if database_ask_note == '1':
         database_note = input("note: ")
