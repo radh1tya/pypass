@@ -1,4 +1,5 @@
 import getpass
+import signal
 import string
 import random
 import os
@@ -9,6 +10,10 @@ import sys
 from cryptography.fernet import Fernet
 
 sys.tracebacklimit = 0
+
+def signal_handler(signum, frame):
+    encrypt_credentials()
+    sys.exit(0)
 
 def generate_key():
     key = Fernet.generate_key()
@@ -49,6 +54,8 @@ def xor_encryption(text, key):
     return encrypted_text
 
 def master_register():
+    directory_name = "./data/"
+    os.mkdir(directory_name)
     master_register_password = getpass.getpass("register password:")
     master_register_salt = ''.join(random.choices(string.ascii_letters, k=7))
 
@@ -93,14 +100,17 @@ def checker(password):
     return decrypted_test == 'your-heart-is-something-new'
 
 def dashboard():
+    signal.signal(signal.SIGINT, signal_handler)
     try:
         os.system('clear')
         print("Welcome to the Pypass!")
         print("You are now logged in as user " + os.getlogin())
         print("*** Ini masih percobaan ***")
         shell()
+    except Exception as e:
     finally:
         encrypt_credentials()
+        sys.exit(0)
         
 def shell():
     while True:
