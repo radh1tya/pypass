@@ -65,8 +65,9 @@ def dashboard():
 def shell():
     while True:
         sh = input("pypass> ")
-        command, *args = sh.split()
-        
+        parts = sh.split()
+        command = parts[0] if parts else None
+        args = parts[1:] if len(parts) > 1 else []
         if command == 'a':
             add_password()
         elif command == 'l':
@@ -76,15 +77,16 @@ def shell():
                 index = int(args[0]) - 1
                 see_password(index)
         elif command == 'h':
-            print("a - menambah password baru")
-            print("l - melihat kumpulan password")
-            print("e - edit password yang tersedia")
+            print("a - add new entry")
+            print("l - list password")
+            print("e - edit password")
             print("s - system setting")
             print("h - help")
             print("q - quit")
         elif command == 'q':
             print("bye :(")
             break
+        
             
 def add_password():
     database_username = input("username: ")
@@ -124,8 +126,13 @@ def list_password():
     with open('./data/credentials.json', 'r') as infile:
         existing_data = json.load(infile)
     for index, item in enumerate(existing_data["users"], start=1):
-        print(f"{index}. {item['username']}")
-
+        if item['note'] == '0':
+            print(f"{index}. {item['username']}")
+            print("---")
+        else:
+            print(f"{index}. {item['username']} " + "note: " + f"{item['note']}")
+            print("---")
+        
 def see_password(index):
     with open('./data/credentials.json', 'r') as infile:
         existing_data = json.load(infile)
