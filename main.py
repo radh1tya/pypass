@@ -5,8 +5,43 @@ import os
 import json
 import sys
 
+# :(
+from cryptography.fernet import Fernet
+
 sys.tracebacklimit = 0
 
+def generate_key():
+    key = Fernet.generate_key()
+    with open('./data/shalt-thou-be-a-sellout.key', 'wb') as filekey:
+        filekey.write(key)
+
+def encrypt_credentials():
+    with open('./data/shalt-thou-be-a-sellout.key', 'rb') as filekey:
+        key = filekey.read()
+    fernet = Fernet(key)
+    
+    with open('./data/credentials.json', 'rb') as file:
+        original = file.read()
+    encrypted = fernet.encrypt(original)
+
+    with open('./data/credentials-encrypted.json', 'wb') as encrypted_file:
+        encrypted_file.write(encrypted)
+
+    os.remove('./data/credentials.json')
+    
+def decrypted_credentials():
+    with open('./data/shalt-thou-be-a-sellout.key', 'rb') as filekey:
+        key = filekey.read()
+    fernet = Fernet(key)
+
+    with open('./data/credentials-encrypted.json', 'rb') as enc_file:
+        encrypted = enc_file.read()
+    decrypted = fernet.decrypt(encrypted)
+
+    with open('./data/credentials.json', 'wb') as dec_file:
+        dec_file.write(decrypted)
+    os.remove('./data/credentials-encrypted.json')
+    
 def xor_encryption(text, key):
     encrypted_text = ""
     for i in range(len(text)):
@@ -21,29 +56,32 @@ def master_register():
     encrypted_test_string = xor_encryption(etc, master_register_password + master_register_salt)
     
     to_save = {
+        "already_created_before": True,
         "master_salt" : master_register_salt,
         "etc" : encrypted_test_string,
         "users": []
     }
-    
-    return to_save
 
+    with open('./data/credentials.json', 'w') as outfile:
+        json.dump(to_save, outfile, indent=1)
+    generate_key()
+    encrypt_credentials()
+   
 def check_login():
-    if not os.path.isfile('./data/credentials.json'):
-        data_to_save = master_register()
-        json_object = json.dumps(data_to_save, indent=1)
-        with open('./data/credentials.json', 'w') as outfile:
-            outfile.write(json_object)
+    if not os.path.isfile('./data/credentials-encrypted.json'):
+        master_register()
     else:
+        decrypted_credentials()
         login()
         
 def login():
-    password = getpass.getpass("password:")
+    password = input("password:")
     if checker(password):
         print("Login berhasil!")
         dashboard()
     else:
         print("Login gagal. Password salah.")
+        encrypt_credentials()
     
 def checker(password):
     with open('./data/credentials.json') as f:
@@ -52,16 +90,18 @@ def checker(password):
     encrypted_test_string = data.get('etc')
     
     decrypted_test = xor_encryption(encrypted_test_string, password + salt)
-    
     return decrypted_test == 'your-heart-is-something-new'
 
 def dashboard():
-    os.system('clear')
-    print("Welcome to the Pypass!")
-    print("You are now logged in as user " + os.getlogin())
-    print("*** Ini masih percobaan ***")
-    shell()
-    
+    try:
+        os.system('clear')
+        print("Welcome to the Pypass!")
+        print("You are now logged in as user " + os.getlogin())
+        print("*** Ini masih percobaan ***")
+        shell()
+    finally:
+        encrypt_credentials()
+        
 def shell():
     while True:
         sh = input("pypass> ")
@@ -79,18 +119,17 @@ def shell():
         elif command == 'h':
             print("a - add new entry")
             print("l - list password")
-            print("e - edit password")
-            print("s - system setting")
+      #      print("e - edit password")
+      #      print("s - system setting")
             print("h - help")
             print("q - quit")
         elif command == 'q':
             print("bye :(")
             break
-        
-            
+
 def add_password():
     database_username = input("username: ")
-    database_password = getpass.getpass("password: ")
+    database_password = input("password: ")
     database_ask_note = input("note? 1 or 0: ")
     if database_ask_note == '1':
         database_note = input("note: ")
