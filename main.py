@@ -129,7 +129,7 @@ def list_password():
             print(f"{index}. {item['username']}")
             print("---")
         else:
-            print(f"{index}. {item['username']} " + "note: " + f"{item['note']}")
+            print(f"{index}. {item['username']} " + "(" + f"{item['note']}" +")")
             print("---")
         
 def see_password(index):
