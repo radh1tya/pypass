@@ -49,7 +49,7 @@ def xor_encryption(text, key):
     return encrypted_text
 
 def master_register():
-    master_register_password = input("register password:")
+    master_register_password = getpass.getpass("register password:")
     master_register_salt = ''.join(random.choices(string.ascii_letters, k=7))
 
     etc = "your-heart-is-something-new"
@@ -75,7 +75,7 @@ def check_login():
         login()
         
 def login():
-    password = input("password:")
+    password  = getpass.getpass("password:")
     if checker(password):
         print("Login berhasil!")
         dashboard()
@@ -119,8 +119,6 @@ def shell():
         elif command == 'h':
             print("a - add new entry")
             print("l - list password")
-      #      print("e - edit password")
-      #      print("s - system setting")
             print("h - help")
             print("q - quit")
         elif command == 'q':
@@ -129,7 +127,7 @@ def shell():
 
 def add_password():
     database_username = input("username: ")
-    database_password = input("password: ")
+    database_password = getpass.getpass("password: ")
     database_ask_note = input("note? 1 or 0: ")
     if database_ask_note == '1':
         database_note = input("note: ")
